@@ -1,6 +1,8 @@
 package modelo;
 
-public class Financiamento {
+import exceptions.AumentoMaiorQueJurosException;
+
+public abstract class Financiamento {
 
     // Atributos
     private double valorImovel;
@@ -17,9 +19,7 @@ public class Financiamento {
         this.taxaJurosAnual = taxaJurosAnual;
     }
 
-    public double getValorImovel(){
-        return this.valorImovel;
-    }
+    public double getValorImovel() { return this.valorImovel; }
 
     public int getPrazoFinanciamento(){
         return this.prazoFinanciamento;
@@ -29,21 +29,24 @@ public class Financiamento {
         return this.taxaJurosAnual;
     }
 
-    public double pagamentoMensal() {
+    public double pagamentoMensal() throws AumentoMaiorQueJurosException {
         double taxaMensal = (this.taxaJurosAnual / 100) / 12;
         return (this.valorImovel / (this.prazoFinanciamento * 12)) * (1 + taxaMensal);
     }
 
 
-    public double totalPagamento() {
+    public double totalPagamento() throws AumentoMaiorQueJurosException {
         return this.pagamentoMensal() * this.prazoFinanciamento * 12;
     }
 
-    public void mostrarDadosGerados(){
+    public void mostrarDadosGerados() throws AumentoMaiorQueJurosException {
         System.out.printf("\nValor do imóvel: R$ %.2f", this.getValorImovel());
         System.out.printf("\nPrazo em anos: %d", this.getPrazoFinanciamento());
         System.out.printf("\nTaxa de juros anual: %.2f%%", this.getTaxaJurosAnual());
         System.out.printf("\n\nPagamento Mensal: R$ %.2f", this.pagamentoMensal());
         System.out.printf("\nTotal a ser pago: R$ %.2f\n", this.totalPagamento());
+        this.mostrarDadosAdicionais();
     }
+
+    public abstract void mostrarDadosAdicionais();
 }

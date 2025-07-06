@@ -1,13 +1,19 @@
 package modelo;
 
 public class Terreno extends Financiamento {
-    private static double acrescimoRisco = 1.02;
+    private  String tipoDeZona;
 
-    public Terreno(double valorImovel, int prazoFinanciamento, double taxaJurosAnual){
+    public Terreno(double valorImovel, int prazoFinanciamento, double taxaJurosAnual, String tipoDeZona){
         super(valorImovel, prazoFinanciamento, taxaJurosAnual);
+        this.tipoDeZona = tipoDeZona;
     }
     @Override
     public double pagamentoMensal(){
-        return super.pagamentoMensal() * acrescimoRisco;
+        return super.pagamentoMensal() * 1.02;
+    }
+
+    @Override
+    public void mostrarDadosAdicionais() {
+        System.out.printf("Tipo de zona: %s%n", this.tipoDeZona);
     }
 }

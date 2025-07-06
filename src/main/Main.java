@@ -1,10 +1,8 @@
 package main;
 
+import exceptions.AumentoMaiorQueJurosException;
 import util.InterfaceUsuario;
-import modelo.Financiamento;
-import modelo.Casa;
-import modelo.Apartamento;
-import modelo.Terreno;
+import modelo.*;
 import java.util.ArrayList;
 
 public class Main {
@@ -26,13 +24,18 @@ public class Main {
 
             switch (tipoFinanciamento){
                 case 1:
-                    financiamentos.add(new Casa(valorImovel, prazoFinan, taxaJur));
+                    double tamanhoTerreno = ui.pedirAreaTerreno();
+                    double areaConstruida = ui.pedirAreaConstruida(tamanhoTerreno);
+                    financiamentos.add(new Casa(valorImovel, prazoFinan, taxaJur, areaConstruida, tamanhoTerreno));
                     break;
                 case 2:
-                    financiamentos.add(new Apartamento(valorImovel, prazoFinan, taxaJur));
+                    int vagas = ui.pedirVagasGaragem();
+                    int andar = ui.pedirNumeroAndar();
+                    financiamentos.add(new Apartamento(valorImovel, prazoFinan, taxaJur, vagas, andar));
                     break;
                 case 3:
-                    financiamentos.add(new Terreno(valorImovel, prazoFinan, taxaJur));
+                    String zona = ui.pedirTipoZona();
+                    financiamentos.add(new Terreno(valorImovel, prazoFinan, taxaJur, zona));
                     break;
             }
         }
@@ -43,13 +46,17 @@ public class Main {
         int contador = 1;
 
         for (Financiamento f : financiamentos){
-            System.out.printf("\n------ Detalhes do %dº financiamento, tipo %s ------\n", contador, f.getClass().getSimpleName());
+            try{
+                System.out.printf("\n------ Detalhes do %dº financiamento, tipo %s ------\n", contador, f.getClass().getSimpleName());
             f.mostrarDadosGerados();
-
             somaImoveis += f.getValorImovel();
             somaFinanciamentos += f.totalPagamento();
 
             contador++;
+            } catch (AumentoMaiorQueJurosException e){
+                System.out.println("Erro no financiamento: " + e.getMessage());
+                somaImoveis += f.getValorImovel();
+            }
         }
         System.out.println("\n============================================");
         System.out.printf("Soma total dos %d imóveis: R$ %.2f\n", numDeFinanciamentos, somaImoveis);
