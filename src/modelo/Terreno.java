@@ -1,5 +1,7 @@
 package modelo;
 
+import exceptions.AumentoMaiorQueJurosException;
+
 public class Terreno extends Financiamento {
     private  String tipoDeZona;
 
@@ -8,7 +10,7 @@ public class Terreno extends Financiamento {
         this.tipoDeZona = tipoDeZona;
     }
     @Override
-    public double pagamentoMensal(){
+    public double pagamentoMensal() throws AumentoMaiorQueJurosException {
         return super.pagamentoMensal() * 1.02;
     }
 
