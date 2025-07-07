@@ -45,8 +45,8 @@ public abstract class Financiamento implements Serializable {
     public void mostrarDadosGerados() throws AumentoMaiorQueJurosException {
         System.out.printf("\nValor do imóvel: R$ %.2f", this.getValorImovel());
         System.out.printf("\nPrazo em anos: %d", this.getPrazoFinanciamento());
-        System.out.printf("\nTaxa de juros anual: %.2f%%", this.getTaxaJurosAnual());
-        System.out.printf("\n\nPagamento Mensal: R$ %.2f", this.pagamentoMensal());
+        System.out.printf("\nTaxa de juros anual: %.2f%%\n", this.getTaxaJurosAnual());
+        System.out.printf("\nPagamento Mensal: R$ %.2f", this.pagamentoMensal());
         System.out.printf("\nTotal a ser pago: R$ %.2f\n", this.totalPagamento());
         this.mostrarDadosAdicionais();
     }
