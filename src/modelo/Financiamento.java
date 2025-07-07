@@ -1,8 +1,9 @@
 package modelo;
 
 import exceptions.AumentoMaiorQueJurosException;
+import java.io.Serializable;
 
-public abstract class Financiamento {
+public abstract class Financiamento implements Serializable {
 
     // Atributos
     private double valorImovel;
@@ -19,7 +20,9 @@ public abstract class Financiamento {
         this.taxaJurosAnual = taxaJurosAnual;
     }
 
-    public double getValorImovel() { return this.valorImovel; }
+    public double getValorImovel() {
+        return this.valorImovel;
+    }
 
     public int getPrazoFinanciamento(){
         return this.prazoFinanciamento;
@@ -49,4 +52,6 @@ public abstract class Financiamento {
     }
 
     public abstract void mostrarDadosAdicionais();
+
+    public abstract String paraFormatoTexto();
 }

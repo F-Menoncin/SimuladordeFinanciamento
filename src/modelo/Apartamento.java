@@ -1,6 +1,8 @@
 package modelo;
 
-public class Apartamento extends Financiamento {
+import java.io.Serializable;
+
+public class Apartamento extends Financiamento implements Serializable {
     private int vagasDaGaragem;
     private int numeroDoAndar;
 
@@ -21,5 +23,10 @@ public class Apartamento extends Financiamento {
     public void mostrarDadosAdicionais(){
         System.out.printf("Vagas na garagem: %d%n", this.vagasDaGaragem);
         System.out.printf("Número do andar: %d%n", this.numeroDoAndar);
+    }
+
+    @Override
+    public String paraFormatoTexto(){
+        return String.format("%.2f;%d;%.2f;%d;%d", getValorImovel(), getPrazoFinanciamento(), getTaxaJurosAnual(), this.vagasDaGaragem, this.numeroDoAndar);
     }
 }

@@ -3,6 +3,7 @@ package main;
 import exceptions.AumentoMaiorQueJurosException;
 import util.InterfaceUsuario;
 import modelo.*;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Main {
@@ -52,15 +53,75 @@ public class Main {
             somaImoveis += f.getValorImovel();
             somaFinanciamentos += f.totalPagamento();
 
-            contador++;
+
             } catch (AumentoMaiorQueJurosException e){
-                System.out.println("Erro no financiamento: " + e.getMessage());
+                System.out.println("\nErro no financiamento: " + e.getMessage());
                 somaImoveis += f.getValorImovel();
+            } finally {
+                contador++;
             }
         }
         System.out.println("\n============================================");
         System.out.printf("Soma total dos %d imóveis: R$ %.2f\n", numDeFinanciamentos, somaImoveis);
         System.out.printf("Soma total dos %d financiamentos: R$ %.2f\n", numDeFinanciamentos, somaFinanciamentos);
         System.out.println("============================================");
+        System.out.println("\n--- Persistência de Dados ---");
+
+        escreverFinanciamentos(financiamentos, "financiamentos.txt");
+        lerFinanciamentos("financiamentos.txt");
+
+        serializarFinanciamentos(financiamentos, "financiamentos.ser");
+        desserializarFinanciamentos("financiamentos.ser");
+
+    }
+
+    public static void escreverFinanciamentos(ArrayList<Financiamento> financiamentos, String arquivoFinanciamentos){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoFinanciamentos))) {
+            for (Financiamento f : financiamentos){
+                writer.write(f.paraFormatoTexto());
+                writer.newLine();
+            }
+            System.out.println("Dados salvos em " + arquivoFinanciamentos);
+        } catch (IOException e){
+            System.err.println("Erro ao escrever no arquivo: " + e.getMessage());
+        }
+    }
+
+    public static void lerFinanciamentos(String arquivoFinanciamentos){
+        System.out.println("\nLendo dados do arquivo para comprovação:");
+        try (BufferedReader reader = new BufferedReader(new FileReader(arquivoFinanciamentos))) {
+            String linha;
+            while ((linha = reader.readLine()) != null){
+                System.out.println(linha);
+            }
+        }catch (IOException e){
+            System.err.println("Erro ao ler o arquivo: " + e.getMessage());
+        }
+    }
+
+    public static void serializarFinanciamentos(ArrayList<Financiamento> financiamentos, String arquivoFinanciamentos){
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivoFinanciamentos))){
+            oos.writeObject(financiamentos);
+            System.out.println("Dados serializados salvos em " + arquivoFinanciamentos);
+        } catch (IOException e){
+            System.err.println("\nErro ao serializar os dados: " + e.getMessage());
+        }
+    }
+
+    public static void desserializarFinanciamentos(String arquivoFinanciamentos){
+        System.out.println("\nLendo dados serializados para comprovação:");
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivoFinanciamentos))){
+            ArrayList<Financiamento> financiamentosLidos = (ArrayList<Financiamento>) ois.readObject();
+            for (Financiamento f : financiamentosLidos){
+                try{
+                    System.out.println("-------------------");
+                    f.mostrarDadosGerados();
+                } catch (AumentoMaiorQueJurosException e){
+                    System.err.println("Erro ao exibir financiamento: " + e.getMessage());
+                }
+            }
+        } catch (IOException | ClassNotFoundException e){
+            System.err.println("\nErro ao desserializar os dados: " + e.getMessage());
+        }
     }
 }
